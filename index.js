@@ -42,14 +42,13 @@ function createNewUser(req, res) {
 
 function getUserById(req, res) {
     const { id } = req.params;
-
-    if (!db.findById(id)) {
-        res.status(404).json({ "message": "The user with the specified ID does not exist." })
-    }
-
+    
     db.findById(id)
     .then(data => {
       console.log(data);
+      if(!data) {
+        res.status(404).json({ "message": "The user with the specified ID does not exist." })
+      }
       res.status(200).json(data)
     })
     .error(error => {
@@ -73,12 +72,13 @@ function getAllUsers(req, res) {
 function deleteUser(req, res) {
     const { id } = req.params;
 
-    if (!db.findById(id)) {
-        res.status(404).json({ "message": "The user with the specified ID does not exist." })
-    }
-
     db.remove(id)
-    .then(data => console.log(data))
+    .then(data => {
+        console.log(data)
+        if(data === 0) {
+            res.status(404).json({ "message": "The user with the specified ID does not exist." })
+        }
+    })
     .catch(err => {
         console.log(err)
         res.status(500).json({ "error": "The user could not be removed" })
@@ -87,10 +87,6 @@ function deleteUser(req, res) {
 
 function updateUser (req, res) {
     const { id } = req.params;
-
-    if (!db.findById(id)) {
-        res.status(404).json({ "message": "The user with the specified ID does not exist." })
-    }
 
     const userToUpdate = {
         name: req.body.name,
@@ -106,6 +102,9 @@ function updateUser (req, res) {
     db.update(id, userToUpdate)
     .then(data => {
         console.log(data)
+        if(data === 0) {
+            res.status(404).json({ "message": "The user with the specified ID does not exist." })
+        }
         res.status(200).json(userToUpdate)
     })
     .catch(err => console.log(err))
