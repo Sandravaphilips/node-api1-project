@@ -7,8 +7,9 @@ const db = require('./data/db')
 
 const app = express()
 
-app.use(cors())
+
 app.use(express.json())
+app.use(cors())
 
 app.post('/api/users', createNewUser)
 app.get('/api/users/:id', getUserById)
