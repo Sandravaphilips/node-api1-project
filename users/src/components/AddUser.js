@@ -6,19 +6,15 @@ const initialUserForm = {
     bio: ''
 }
 
-export default function AddUser({setUsers, users}) {
+export default function AddUser() {
     const [userForm, setUserForm] = useState(initialUserForm);
 
     function addUser(e) {
-        // const newUser = {
-        //     name: userForm.name,
-        //     bio: userForm.bio
-        // }
+        
         e.preventDefault()
         axios.post('http://localhost:3300/api/users', userForm)
         .then(res => {
             console.log(res.data)
-            setUsers(users.concat(res.data))
             setUserForm(initialUserForm)
         })
         .catch(err => console.log(err))
@@ -26,7 +22,7 @@ export default function AddUser({setUsers, users}) {
 
     const onInputChange = e => {
         e.preventDefault()
-        setUserForm({[e.target.name]: e.target.value})
+        setUserForm({...userForm, [e.target.name]: e.target.value})
     }
 
     return (

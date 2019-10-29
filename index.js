@@ -21,9 +21,8 @@ app.get('*', handleDefaultRequest)
 function createNewUser(req, res) {
     const user = {
         name: req.body.name,
-        bio: req.body.bio,
-        created_at: new Date(),
-        updated_at: new Date()
+        bio: req.body.bio
+        
     }
 
     if (!user.name || !user.bio) {
@@ -32,8 +31,15 @@ function createNewUser(req, res) {
 
     db.insert(user)
     .then(data => {
-      console.log(data);
-      res.status(201).json(user)
+        console.log(data);
+        db.findById(data.id)
+        .then(data => {
+        console.log(data);
+        if(!data) {
+            res.status(404).json({ "message": "The user with the specified ID does not exist." })
+        }
+      res.status(201).json(data)
+    })
     })
     .catch(error => {
       console.log(error);
@@ -52,7 +58,7 @@ function getUserById(req, res) {
       }
       res.status(200).json(data)
     })
-    .error(error => {
+    .catch(error => {
       console.log(error);
      res.status(500).json({ "error": "The user information could not be retrieved." })
     })

@@ -9,7 +9,7 @@ const UsersStyle = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    /* text-align: center; */
+    
 `
 
 export default function Users() {
@@ -32,7 +32,7 @@ export default function Users() {
 
     return (
         <UsersStyle>
-            <AddUser setUsers={setUsers} users={users} />
+            <AddUser  />
             <div>
                 {users.map(user => 
                     <User key={user.id} user={user} deleteUser={deleteUser} />
